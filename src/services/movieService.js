@@ -10,8 +10,8 @@ const options = {
 export default class MovieService {
   _apiBase = 'https://api.themoviedb.org/3/search/movie?query='
 
-  async getResource(searchFilm = 'return') {
-    const res = await fetch(`${this._apiBase}${searchFilm}&include_adult=false&language=en-US&page=1`, options)
+  async getResource(searchFilm = 'return', page = 1) {
+    const res = await fetch(`${this._apiBase}${searchFilm}&include_adult=false&language=en-US&page=${page}`, options)
 
     if (!res.ok) {
       throw new Error(`Could not fetch ${res}` + `, received ${res.status}`)
@@ -20,8 +20,8 @@ export default class MovieService {
     return await res.json()
   }
 
-  async getMovies(movie) {
-    const res = await this.getResource(movie)
+  async getMovies(movie, page) {
+    const res = await this.getResource(movie, page)
     return res.results
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Flex, Card, Typography, Col, Spin, Alert, Image } from 'antd'
+import { Flex, Card, Typography, Col, Spin, Alert, Image, Result } from 'antd'
 import { format } from 'date-fns'
 
 const { Text, Paragraph, Title } = Typography
@@ -17,17 +17,30 @@ export default class MovieCard extends Component {
   render() {
     const { movieList, loading, error } = this.props
 
-    const hasDate = !(loading || error)
+    // const hasDate = !(loading || error)
 
     const errorMessage = error ? <ErrorIndicator /> : null
     const spinner = loading ? <Spiner /> : null
-    const content = hasDate ? <MoviesView movieList={movieList} /> : null
+    // const content = hasDate ? <MoviesView movieList={movieList} /> : null
+
+    const searchResult =
+      movieList.length !== 0 ? (
+        <MoviesView movieList={movieList} />
+      ) : (
+        <Result
+          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          status="404"
+          title="Nothing Found!"
+          subTitle="It seems we can't find what you're looking for."
+        />
+      )
 
     return (
       <>
         {errorMessage}
         {spinner}
-        {content}
+        {/* {content} */}
+        {searchResult}
       </>
     )
   }
@@ -42,7 +55,7 @@ const MoviesView = ({ movieList }) => {
       {movieList.map((movie) => (
         <Col key={movie.id} span={12}>
           <Card hoverable style={cardStyle} styles={{ body: { padding: 0, overflow: 'hidden' } }}>
-            <Flex justify="start">
+            <Flex justify="center">
               <Image
                 alt={movie.title}
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

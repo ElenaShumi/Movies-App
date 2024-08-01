@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Tabs } from 'antd'
+import { Tabs, Pagination } from 'antd'
 import debounce from 'lodash.debounce'
 
 import MovieService from '../services/movieService'
@@ -18,6 +18,7 @@ export default class TabsStatus extends Component {
     term: '',
     movieList: [],
     loading: true,
+    current: 1,
   }
 
   onMoviesLoaded = (movies) => {
@@ -35,10 +36,10 @@ export default class TabsStatus extends Component {
     })
   }
 
-  debouncedGetResponse = debounce((value) => this.updateMovies(value), 300)
+  debouncedGetResponse = debounce((value, page) => this.updateMovies(value, page), 300)
 
-  updateMovies(movie) {
-    this.movieService.getMovies(movie).then(this.onMoviesLoaded).catch(this.onError)
+  updateMovies(movie, page) {
+    this.movieService.getMovies(movie, page).then(this.onMoviesLoaded).catch(this.onError)
   }
 
   onSearchChange = (term) => {
@@ -46,8 +47,13 @@ export default class TabsStatus extends Component {
     this.debouncedGetResponse(term)
   }
 
+  onChangePages = (page) => {
+    this.setState({ current: page })
+    this.debouncedGetResponse(this.state.term, page)
+  }
+
   render() {
-    const { movieList, loading, error } = this.state
+    const { movieList, loading, error, current } = this.state
 
     return (
       <Tabs
@@ -66,6 +72,14 @@ export default class TabsStatus extends Component {
               <>
                 <SearchPanel onSearchChange={this.onSearchChange} />
                 <CardsList movieList={movieList} onError={error} onLoaded={loading} />
+                <Pagination
+                  align="center"
+                  defaultCurrent={1}
+                  total={50}
+                  onChange={this.onChangePages}
+                  current={current}
+                  style={{ marginTop: '30px' }}
+                />
               </>
             ),
           },
@@ -75,6 +89,14 @@ export default class TabsStatus extends Component {
             children: (
               <>
                 <CardsList movieList={movieList} onError={error} onLoaded={loading} />
+                <Pagination
+                  align="center"
+                  defaultCurrent={1}
+                  total={50}
+                  onChange={this.onChangePages}
+                  current={current}
+                  style={{ marginTop: '30px' }}
+                />
               </>
             ),
           },
