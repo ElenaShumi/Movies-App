@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Flex, Card, Typography, Col, Spin, Alert, Image } from 'antd'
 import { format } from 'date-fns'
 
-import MovieService from '../services/movieService'
-
 const { Text, Paragraph, Title } = Typography
 
 const cardStyle = {
@@ -11,50 +9,13 @@ const cardStyle = {
   height: '279px',
 }
 
-// const imgStyle = {
-//   display: 'block',
-//   width: '35%',
-//   height: '279px',
-// }
-
 export default class MovieCard extends Component {
-  movieService = new MovieService()
-
-  state = {
-    movieList: [],
-    loading: true,
-  }
-
-  constructor() {
-    super()
-    this.updateMovies()
-  }
-
-  onMoviesLoaded = (movies) => {
-    this.setState({
-      movieList: movies,
-      loading: false,
-      error: false,
-    })
-  }
-
-  onError = () => {
-    this.setState({
-      error: true,
-      loading: false,
-    })
-  }
-
-  updateMovies() {
-    this.movieService.getAllMovies().then(this.onMoviesLoaded).catch(this.onError)
-  }
-
   truncateOverview(str) {
     return str.length > 190 ? str.slice(0, str.indexOf(' ', 190)) + '…' : str
   }
 
   render() {
-    const { movieList, loading, error } = this.state
+    const { movieList, loading, error } = this.props
 
     const hasDate = !(loading || error)
 

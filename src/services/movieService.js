@@ -20,8 +20,8 @@ export default class MovieService {
     return await res.json()
   }
 
-  async getAllMovies() {
-    const res = await this.getResource()
+  async getMovies(movie) {
+    const res = await this.getResource(movie)
     return res.results
   }
 }

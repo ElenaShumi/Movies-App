@@ -1,12 +1,54 @@
 import React, { Component } from 'react'
 import { Tabs } from 'antd'
+import debounce from 'lodash.debounce'
+
+import MovieService from '../services/movieService'
 
 import SearchPanel from './searchPanel'
 import CardsList from './cardsList'
 
 export default class TabsStatus extends Component {
+  movieService = new MovieService()
+
+  componentDidMount() {
+    this.updateMovies()
+  }
+
+  state = {
+    term: '',
+    movieList: [],
+    loading: true,
+  }
+
+  onMoviesLoaded = (movies) => {
+    this.setState({
+      movieList: movies,
+      loading: false,
+      error: false,
+    })
+  }
+
+  onError = () => {
+    this.setState({
+      error: true,
+      loading: false,
+    })
+  }
+
+  debouncedGetResponse = debounce((value) => this.updateMovies(value), 300)
+
+  updateMovies(movie) {
+    this.movieService.getMovies(movie).then(this.onMoviesLoaded).catch(this.onError)
+  }
+
+  onSearchChange = (term) => {
+    this.setState({ term })
+    this.debouncedGetResponse(term)
+  }
+
   render() {
-    const { movieList } = this.props
+    const { movieList, loading, error } = this.state
+
     return (
       <Tabs
         defaultActiveKey="Search"
@@ -22,8 +64,8 @@ export default class TabsStatus extends Component {
             key: 'Search',
             children: (
               <>
-                <SearchPanel />
-                <CardsList movieList={movieList} />
+                <SearchPanel onSearchChange={this.onSearchChange} />
+                <CardsList movieList={movieList} onError={error} onLoaded={loading} />
               </>
             ),
           },
@@ -32,7 +74,7 @@ export default class TabsStatus extends Component {
             key: 'Rated',
             children: (
               <>
-                <CardsList movieList={movieList} />
+                <CardsList movieList={movieList} onError={error} onLoaded={loading} />
               </>
             ),
           },
