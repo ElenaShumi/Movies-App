@@ -8,7 +8,7 @@ export default class CardsList extends Component {
     return (
       <>
         <Row gutter={[36, 37]}>
-          <MovieCard />
+          <MovieCard movieList={this.props.movieList} />
         </Row>
       </>
     )

@@ -1,12 +1,31 @@
 import React, { Component } from 'react'
 import { Flex, Layout } from 'antd'
 
-import CardsList from './cardsList'
+import TabsStatus from './tabsStatus'
 
 const { Content } = Layout
 
 export default class App extends Component {
+  state = {
+    term: '',
+    movieList: [],
+  }
+  search(items, term) {
+    if (term.length === 0) {
+      return items
+    }
+
+    return items.filter((item) => {
+      return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1
+    })
+  }
+  onSearchChange = (term) => {
+    this.setState({ term })
+  }
+
   render() {
+    const { movieList } = this.state
+    // const visibleItems = this.search(movieList, term) / Для поиска
     return (
       <>
         <Flex gap="middle" wrap align="start">
@@ -25,7 +44,7 @@ export default class App extends Component {
                   padding: '21px 7%',
                 }}
               >
-                <CardsList />
+                <TabsStatus movieList={movieList} />
               </div>
             </Content>
           </Layout>
