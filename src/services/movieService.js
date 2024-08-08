@@ -8,10 +8,14 @@ const options = {
 }
 
 export default class MovieService {
-  _apiBase = 'https://api.themoviedb.org/3/search/movie?query='
+  _apiBase = 'https://api.themoviedb.org/3/'
+  _apiKey = '646f09e654acd9a51aef9d247eff4bb3'
 
   async getResource(searchFilm = 'return', page = 1) {
-    const res = await fetch(`${this._apiBase}${searchFilm}&include_adult=false&language=en-US&page=${page}`, options)
+    const res = await fetch(
+      `${this._apiBase}search/movie?query=${searchFilm}&include_adult=false&api_key=${this._apiKey}&language=en-US&page=${page}`,
+      options
+    )
 
     if (!res.ok) {
       throw new Error(`Could not fetch ${res}` + `, received ${res.status}`)
@@ -20,13 +24,18 @@ export default class MovieService {
     return await res.json()
   }
 
+  async createGuestSession() {
+    const newSession = await fetch(`${this._apiBase}/authentication/guest_session/new`, options)
+
+    if (!newSession.ok) {
+      throw new Error(`Could not fetch ${newSession}` + `, received ${newSession.status}`)
+    }
+
+    return await newSession.json()
+  }
+
   async getMovies(movie, page) {
     const res = await this.getResource(movie, page)
     return res.results
   }
 }
-//  'https://api.themoviedb.org/3/search/movie?query=return&include_adult=false&language=en-US&page=3'
-
-// MovieService.defaultProps = {
-//   searchFilm: 'return',
-// }

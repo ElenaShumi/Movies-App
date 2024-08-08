@@ -1,15 +1,33 @@
 import React, { Component } from 'react'
 import { Flex, Layout } from 'antd'
 
+import MovieService from '../services/movieService'
+
 import TabsStatus from './tabsStatus'
 
 const { Content } = Layout
 
 export default class App extends Component {
+  movieService = new MovieService()
+
   state = {
     term: '',
     movieList: [],
+    sessionId: '',
   }
+
+  componentDidMount() {
+    const createGS = this.movieService.createGuestSession()
+    this.createSession(createGS)
+  }
+
+  async createSession(value) {
+    const sessionId = await value.then((response) => response.guest_session_id)
+    this.setState({
+      sessionId,
+    })
+  }
+
   search(items, term) {
     if (term.length === 0) {
       return items
