@@ -52,9 +52,27 @@ export default class TabsStatus extends Component {
     this.debouncedGetResponse(this.state.term, page)
   }
 
+  toggleRating(arr, id, value) {
+    const idx = arr.findIndex((el) => el.id === id)
+
+    const oldItem = arr[idx]
+    const newItem = { ...oldItem, ['ratingValue']: value }
+    console.log(newItem)
+    return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)]
+  }
+
+  onToggleRating = (id, value) => {
+    console.log('Work 1 ' + value)
+    this.setState(({ movieList }) => {
+      return {
+        todoData: this.toggleRating(movieList, id, value),
+      }
+    })
+  }
+
   render() {
     const { movieList, loading, error, current } = this.state
-
+    console.log(movieList)
     return (
       <Tabs
         defaultActiveKey="Search"
@@ -71,7 +89,12 @@ export default class TabsStatus extends Component {
             children: (
               <>
                 <SearchPanel onSearchChange={this.onSearchChange} />
-                <CardsList movieList={movieList} onError={error} onLoaded={loading} />
+                <CardsList
+                  movieList={movieList}
+                  onError={error}
+                  loading={loading}
+                  onToggleRating={this.onToggleRating}
+                />
                 <Pagination
                   align="center"
                   defaultCurrent={1}
@@ -88,7 +111,7 @@ export default class TabsStatus extends Component {
             key: 'Rated',
             children: (
               <>
-                <CardsList movieList={movieList} onError={error} onLoaded={loading} />
+                {/* <CardsList movieList={movieList} onError={error} onLoaded={loading} /> */}
                 <Pagination
                   align="center"
                   defaultCurrent={1}
