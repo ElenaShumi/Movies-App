@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Flex, Card, Typography, Col, Image, Rate } from 'antd'
 import { format } from 'date-fns'
 
+import MovieService from '../services/movieService'
+
 const { Text, Paragraph, Title } = Typography
 
 const cardStyle = {
@@ -9,6 +11,7 @@ const cardStyle = {
   height: '279px',
 }
 export default class MoviesView extends Component {
+  movieService = new MovieService()
   truncateOverview = (str) => {
     return str.length > 130 ? str.slice(0, str.indexOf(' ', 130)) + '…' : str
   }
@@ -26,7 +29,7 @@ export default class MoviesView extends Component {
 
   render() {
     const { movieList, onToggleRating } = this.props
-    console.log(movieList)
+    // console.log(movieList)
 
     return (
       <>

@@ -2,8 +2,6 @@ const options = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NDZmMDllNjU0YWNkOWE1MWFlZjlkMjQ3ZWZmNGJiMyIsIm5iZiI6MTcyMTgyNzY4MS41NDAzODgsInN1YiI6IjY2OWU0YWI3YTA0YjFkYzVjMzhiOTg2YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TymTq1m3wGD25i0N-aTWLoEx-UVQsAwAWL4ObrVtF_c',
   },
 }
 
@@ -25,13 +23,48 @@ export default class MovieService {
   }
 
   async createGuestSession() {
-    const newSession = await fetch(`${this._apiBase}/authentication/guest_session/new`, options)
+    const newSession = await fetch(`${this._apiBase}authentication/guest_session/new?api_key=${this._apiKey}`, options)
 
     if (!newSession.ok) {
       throw new Error(`Could not fetch ${newSession}` + `, received ${newSession.status}`)
     }
 
     return await newSession.json()
+  }
+
+  async addRating(movieId, guestSessionId, rating) {
+    const result = await fetch(
+      `${this._apiBase}movie/${movieId}/rating?api_key=${this._apiKey}&guest_session_id=${guestSessionId}`,
+      {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({
+          value: rating,
+        }),
+      }
+    )
+
+    if (!result.ok) {
+      throw new Error(`Could not fetch ${result}` + `, received ${result.status}`)
+    }
+
+    return await result.json()
+  }
+
+  async getRatedMovies(guestSessionId) {
+    const result = await fetch(
+      `${this._apiBase}guest_session/${guestSessionId}/rated/movies?api_key=${this._apiKey}&language=en-US&page=1&sort_by=created_at.asc`,
+      options
+    )
+
+    if (!result.ok) {
+      throw new Error(`Could not fetch ${result}` + `, received ${result.status}`)
+    }
+
+    return await result.json()
   }
 
   async getMovies(movie, page) {
