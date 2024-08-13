@@ -18,17 +18,11 @@ export default class App extends Component {
 
   componentDidMount() {
     const createGS = this.movieService.createGuestSession()
-    // console.log(createGS)
     this.createSession(createGS)
   }
 
   async createSession(value) {
     const sessionId = await value.then((response) => response.guest_session_id)
-    console.log(sessionId)
-    await this.movieService.addRating(1268051, sessionId, 6).then((res) => console.log(res))
-    await this.movieService.addRating(1202644, sessionId, 2).then((res) => console.log(res))
-    await this.movieService.getRatedMovies(sessionId).then((res) => console.log(res.results))
-    // console.log(sessionId)
     this.setState({
       sessionId,
     })
@@ -48,9 +42,8 @@ export default class App extends Component {
   }
 
   render() {
-    const { movieList } = this.state
-    // const visibleItems = this.search(movieList, term) / Для поиска
-    // console.log(movieList)
+    const { movieList, sessionId } = this.state
+
     return (
       <>
         <Flex gap="middle" wrap align="start">
@@ -69,7 +62,7 @@ export default class App extends Component {
                   padding: '21px 7%',
                 }}
               >
-                <TabsStatus movieList={movieList} />
+                <TabsStatus movieList={movieList} sessionId={sessionId} />
               </div>
             </Content>
           </Layout>

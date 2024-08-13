@@ -12,6 +12,7 @@ const cardStyle = {
 }
 export default class MoviesView extends Component {
   movieService = new MovieService()
+
   truncateOverview = (str) => {
     return str.length > 130 ? str.slice(0, str.indexOf(' ', 130)) + '…' : str
   }
@@ -23,13 +24,8 @@ export default class MoviesView extends Component {
     else if (num >= 7) return '#66E900'
   }
 
-  state = {
-    ratingValue: 0,
-  }
-
   render() {
-    const { movieList, onToggleRating } = this.props
-    // console.log(movieList)
+    const { movieList, sessionId } = this.props
 
     return (
       <>
@@ -74,7 +70,10 @@ export default class MoviesView extends Component {
                   <Paragraph>{this.truncateOverview(movie.overview)}</Paragraph>
                   <Rate
                     allowHalf
-                    onChange={(value) => onToggleRating(movie.id, value)}
+                    value={movie.rating}
+                    onChange={(value) =>
+                      this.movieService.addRating(movie.id, sessionId, value).then((res) => console.log(res))
+                    }
                     count={10}
                     style={{ fontSize: '16px' }}
                   />

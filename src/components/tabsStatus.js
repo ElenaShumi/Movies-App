@@ -17,8 +17,11 @@ export default class TabsStatus extends Component {
   state = {
     term: '',
     movieList: [],
+    movieListRated: [],
     loading: true,
     current: 1,
+    currentRated: 1,
+    sessionId: '',
   }
 
   onMoviesLoaded = (movies) => {
@@ -52,6 +55,11 @@ export default class TabsStatus extends Component {
     this.debouncedGetResponse(this.state.term, page)
   }
 
+  onChangePagesRated = (page) => {
+    this.setState({ currentRated: page })
+    this.onRatedMovies()
+  }
+
   toggleRating(arr, id, value) {
     const idx = arr.findIndex((el) => el.id === id)
 
@@ -70,14 +78,22 @@ export default class TabsStatus extends Component {
     })
   }
 
+  onRatedMovies = () => {
+    this.movieService
+      .getRatedMovies(this.props.sessionId, this.state.currentRated)
+      .then((res) => this.setState({ movieListRated: res.results }))
+  }
+
   render() {
-    const { movieList, loading, error, current } = this.state
-    console.log(movieList)
+    const { movieList, movieListRated, loading, error, current, currentRated } = this.state
+    const { sessionId } = this.props
+
     return (
       <Tabs
         defaultActiveKey="Search"
         size="large"
         centered
+        onChange={this.onRatedMovies}
         indicator={{
           size: (origin) => origin + 30,
           align: 'center',
@@ -94,6 +110,7 @@ export default class TabsStatus extends Component {
                   onError={error}
                   loading={loading}
                   onToggleRating={this.onToggleRating}
+                  sessionId={sessionId}
                 />
                 <Pagination
                   align="center"
@@ -111,13 +128,13 @@ export default class TabsStatus extends Component {
             key: 'Rated',
             children: (
               <>
-                {/* <CardsList movieList={movieList} onError={error} onLoaded={loading} /> */}
+                <CardsList movieList={movieListRated} onError={error} onLoaded={loading} />
                 <Pagination
                   align="center"
                   defaultCurrent={1}
                   total={50}
-                  onChange={this.onChangePages}
-                  current={current}
+                  onChange={this.onChangePagesRated}
+                  current={currentRated}
                   style={{ marginTop: '30px' }}
                 />
               </>

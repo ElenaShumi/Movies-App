@@ -9,7 +9,7 @@ export default class MovieCard extends Component {
   }
 
   render() {
-    const { movieList, loading, error, onToggleRating } = this.props
+    const { movieList, loading, error, onToggleRating, sessionId } = this.props
 
     // const hasDate = !(loading || error)
 
@@ -19,7 +19,7 @@ export default class MovieCard extends Component {
 
     const searchResult =
       movieList.length !== 0 ? (
-        <MoviesView movieList={movieList} onToggleRating={onToggleRating} />
+        <MoviesView movieList={movieList} onToggleRating={onToggleRating} sessionId={sessionId} />
       ) : (
         <Result
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
