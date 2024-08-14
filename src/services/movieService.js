@@ -67,6 +67,16 @@ export default class MovieService {
     return await result.json()
   }
 
+  async getGenreMovieList() {
+    const genres = await fetch(`${this._apiBase}genre/movie/list?api_key=${this._apiKey}&language=en`, options)
+
+    if (!genres.ok) {
+      throw new Error(`Could not fetch ${genres}` + `, received ${genres.status}`)
+    }
+
+    return await genres.json()
+  }
+
   async getMovies(movie, page) {
     const res = await this.getResource(movie, page)
     return res.results

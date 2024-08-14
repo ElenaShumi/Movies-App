@@ -65,12 +65,11 @@ export default class TabsStatus extends Component {
 
     const oldItem = arr[idx]
     const newItem = { ...oldItem, ['ratingValue']: value }
-    console.log(newItem)
+
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)]
   }
 
   onToggleRating = (id, value) => {
-    console.log('Work 1 ' + value)
     this.setState(({ movieList }) => {
       return {
         todoData: this.toggleRating(movieList, id, value),
@@ -87,7 +86,6 @@ export default class TabsStatus extends Component {
   render() {
     const { movieList, movieListRated, loading, error, current, currentRated } = this.state
     const { sessionId } = this.props
-
     return (
       <Tabs
         defaultActiveKey="Search"

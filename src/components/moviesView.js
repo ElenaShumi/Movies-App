@@ -4,7 +4,9 @@ import { format } from 'date-fns'
 
 import MovieService from '../services/movieService'
 
-const { Text, Paragraph, Title } = Typography
+import GenresMovie from './genresMovie'
+
+const { Paragraph, Title } = Typography
 
 const cardStyle = {
   width: '451px',
@@ -64,16 +66,13 @@ export default class MoviesView extends Component {
                     {movie.release_date ? format(new Date(movie.release_date), 'MMMM dd, yyyy') : ' '}
                   </Paragraph>
                   <Paragraph>
-                    <Text code>Action</Text>
-                    <Text code>Drama</Text>
+                    <GenresMovie genresId={movie.genre_ids} />
                   </Paragraph>
                   <Paragraph>{this.truncateOverview(movie.overview)}</Paragraph>
                   <Rate
                     allowHalf
                     value={movie.rating}
-                    onChange={(value) =>
-                      this.movieService.addRating(movie.id, sessionId, value).then((res) => console.log(res))
-                    }
+                    onChange={(value) => this.movieService.addRating(movie.id, sessionId, value)}
                     count={10}
                     style={{ fontSize: '16px' }}
                   />
