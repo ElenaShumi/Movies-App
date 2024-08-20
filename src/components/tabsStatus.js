@@ -41,7 +41,6 @@ export default class TabsStatus extends Component {
   }
 
   onTotalResultsRated = (number) => {
-    console.log(number)
     this.setState({
       totalResultsRated: number,
     })
@@ -124,6 +123,7 @@ export default class TabsStatus extends Component {
                 <SearchPanel onSearchChange={this.onSearchChange} />
                 <CardsList
                   movieList={movieList}
+                  movieListRated={movieListRated}
                   onError={error}
                   loading={loading}
                   onToggleRating={this.onToggleRating}

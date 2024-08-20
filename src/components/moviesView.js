@@ -26,6 +26,19 @@ export default class MoviesView extends Component {
     else if (num >= 7) return '#66E900'
   }
 
+  getRating(id) {
+    const { movieListRated } = this.props
+    const idx = movieListRated.findIndex((el) => el.id === id)
+
+    if (idx === -1) {
+      return 0
+    }
+
+    const item = movieListRated[idx]
+
+    return item.rating
+  }
+
   render() {
     const { movieList, sessionId } = this.props
 
@@ -71,7 +84,8 @@ export default class MoviesView extends Component {
                   <Paragraph>{this.truncateOverview(movie.overview)}</Paragraph>
                   <Rate
                     allowHalf
-                    value={movie.rating}
+                    // value={}
+                    defaultValue={movie.rating ? movie.rating : this.getRating(movie.id)}
                     onChange={(value) => this.movieService.addRating(movie.id, sessionId, value)}
                     count={10}
                     style={{ fontSize: '16px' }}
