@@ -15,13 +15,15 @@ export default class TabsStatus extends Component {
   }
 
   state = {
-    term: '',
+    term: 'return',
     movieList: [],
     movieListRated: [],
     loading: true,
     current: 1,
     currentRated: 1,
     sessionId: '',
+    totalResults: 0,
+    totalResultsRated: 0,
   }
 
   onMoviesLoaded = (movies) => {
@@ -29,6 +31,19 @@ export default class TabsStatus extends Component {
       movieList: movies,
       loading: false,
       error: false,
+    })
+  }
+
+  onTotalResults = (number) => {
+    this.setState({
+      totalResults: number,
+    })
+  }
+
+  onTotalResultsRated = (number) => {
+    console.log(number)
+    this.setState({
+      totalResultsRated: number,
     })
   }
 
@@ -43,6 +58,7 @@ export default class TabsStatus extends Component {
 
   updateMovies(movie, page) {
     this.movieService.getMovies(movie, page).then(this.onMoviesLoaded).catch(this.onError)
+    this.movieService.getTotalResults(movie).then(this.onTotalResults).catch(this.onError)
   }
 
   onSearchChange = (term) => {
@@ -81,10 +97,13 @@ export default class TabsStatus extends Component {
     this.movieService
       .getRatedMovies(this.props.sessionId, this.state.currentRated)
       .then((res) => this.setState({ movieListRated: res.results }))
+      .catch(this.onError)
+    this.movieService.getTotalResultsRated(this.props.sessionId).then(this.onTotalResultsRated).catch(this.onError)
   }
 
   render() {
-    const { movieList, movieListRated, loading, error, current, currentRated } = this.state
+    const { movieList, movieListRated, loading, error, current, currentRated, totalResults, totalResultsRated } =
+      this.state
     const { sessionId } = this.props
     return (
       <Tabs
@@ -113,7 +132,9 @@ export default class TabsStatus extends Component {
                 <Pagination
                   align="center"
                   defaultCurrent={1}
-                  total={50}
+                  total={totalResults}
+                  showSizeChanger={false}
+                  pageSize={20}
                   onChange={this.onChangePages}
                   current={current}
                   style={{ marginTop: '30px' }}
@@ -130,8 +151,10 @@ export default class TabsStatus extends Component {
                 <Pagination
                   align="center"
                   defaultCurrent={1}
-                  total={50}
+                  total={totalResultsRated}
                   onChange={this.onChangePagesRated}
+                  showSizeChanger={false}
+                  pageSize={20}
                   current={currentRated}
                   style={{ marginTop: '30px' }}
                 />

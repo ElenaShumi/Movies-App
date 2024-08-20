@@ -81,4 +81,14 @@ export default class MovieService {
     const res = await this.getResource(movie, page)
     return res.results
   }
+
+  async getTotalResults(title) {
+    const res = await this.getResource(title)
+    return res['total_results']
+  }
+
+  async getTotalResultsRated(guestSessionId) {
+    const res = await this.getRatedMovies(guestSessionId)
+    return res['total_results']
+  }
 }
