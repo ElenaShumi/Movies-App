@@ -9,6 +9,7 @@ import TabsStatus from './tabsStatus'
 const { Content } = Layout
 
 export default class App extends Component {
+  isMobile = window.matchMedia('(max-width: 767px)').matches
   movieService = new MovieService()
 
   state = {
@@ -64,7 +65,7 @@ export default class App extends Component {
               <Content
                 style={{
                   margin: '0 auto',
-                  width: '1100px',
+                  width: this.isMobile ? '100vw' : '1100px',
                   minHeight: '100vh',
                 }}
               >
@@ -72,7 +73,7 @@ export default class App extends Component {
                   style={{
                     background: '#FFFFFF',
                     minHeight: '100vh',
-                    padding: '21px 7%',
+                    padding: this.isMobile ? '0 16px' : '21px 7%',
                   }}
                 >
                   <TabsStatus movieList={movieList} sessionId={sessionId} />
