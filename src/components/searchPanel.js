@@ -19,9 +19,7 @@ export default class SearchPanel extends Component {
         placeholder="Type to search..."
         value={this.state.term}
         onChange={this.onSearchChange}
-        style={{
-          marginBottom: '34px',
-        }}
+        className="search-panel"
       />
     )
   }

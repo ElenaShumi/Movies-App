@@ -27,7 +27,7 @@ export default class MovieCard extends Component {
         />
       ) : (
         <Result
-          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          className="result-nothing"
           status="404"
           title="Nothing Found!"
           subTitle="It seems we can't find what you're looking for."
@@ -57,7 +57,7 @@ const ErrorIndicator = () => {
   return (
     <>
       <Alert
-        style={{ margin: '100px auto' }}
+        className="error"
         message="Error"
         description="Something went wrong. Please try again"
         type="error"

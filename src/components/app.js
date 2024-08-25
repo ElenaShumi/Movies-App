@@ -9,7 +9,6 @@ import TabsStatus from './tabsStatus'
 const { Content } = Layout
 
 export default class App extends Component {
-  isMobile = window.matchMedia('(max-width: 767px)').matches
   movieService = new MovieService()
 
   state = {
@@ -62,20 +61,8 @@ export default class App extends Component {
         <GenresContext.Provider value={arrGenres}>
           <Flex gap="middle" wrap align="start">
             <Layout>
-              <Content
-                style={{
-                  margin: '0 auto',
-                  width: this.isMobile ? '100vw' : '1100px',
-                  minHeight: '100vh',
-                }}
-              >
-                <div
-                  style={{
-                    background: '#FFFFFF',
-                    minHeight: '100vh',
-                    padding: this.isMobile ? '0 16px' : '21px 7%',
-                  }}
-                >
+              <Content className="main">
+                <div className="main_container">
                   <TabsStatus movieList={movieList} sessionId={sessionId} />
                 </div>
               </Content>

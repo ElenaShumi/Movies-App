@@ -61,7 +61,7 @@ export default class TabsStatus extends Component {
   }
 
   onSearchChange = (term) => {
-    this.setState({ term })
+    this.setState({ term, current: 1 })
     this.debouncedGetResponse(term)
   }
 
@@ -72,7 +72,7 @@ export default class TabsStatus extends Component {
 
   onChangePagesRated = (page) => {
     this.setState({ currentRated: page })
-    this.onRatedMovies()
+    this.onRatedMovies(this.props.sessionId, page)
   }
 
   toggleRating(arr, id, value) {
@@ -92,12 +92,12 @@ export default class TabsStatus extends Component {
     })
   }
 
-  onRatedMovies = () => {
+  onRatedMovies = (id, page) => {
     this.movieService
-      .getRatedMovies(this.props.sessionId, this.state.currentRated)
+      .getRatedMovies(id, page)
       .then((res) => this.setState({ movieListRated: res.results }))
       .catch(this.onError)
-    this.movieService.getTotalResultsRated(this.props.sessionId).then(this.onTotalResultsRated).catch(this.onError)
+    this.movieService.getTotalResultsRated(id, page).then(this.onTotalResultsRated).catch(this.onError)
   }
 
   render() {
@@ -109,7 +109,7 @@ export default class TabsStatus extends Component {
         defaultActiveKey="Search"
         size="large"
         centered
-        onChange={this.onRatedMovies}
+        onChange={() => this.onRatedMovies(sessionId, currentRated)}
         indicator={{
           size: (origin) => origin + 30,
           align: 'center',
@@ -137,7 +137,7 @@ export default class TabsStatus extends Component {
                   pageSize={20}
                   onChange={this.onChangePages}
                   current={current}
-                  style={{ marginTop: '30px' }}
+                  className="pagination"
                 />
               </>
             ),
@@ -156,7 +156,7 @@ export default class TabsStatus extends Component {
                   showSizeChanger={false}
                   pageSize={20}
                   current={currentRated}
-                  style={{ marginTop: '30px' }}
+                  className="pagination"
                 />
               </>
             ),
