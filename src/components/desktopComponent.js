@@ -22,22 +22,22 @@ export default class DesktopComponent extends Component {
     else if (num >= 7) return '#66E900'
   }
 
-  getRating(id) {
-    const { movieListRated } = this.props
-    const idx = movieListRated.findIndex((el) => el.id === id)
+  getRating = (id) => {
+    const { ratingList } = this.props
+    const idx = ratingList.findIndex((el) => el.id === id)
 
     if (idx === -1) {
       return 0
     }
 
-    const item = movieListRated[idx]
+    const item = ratingList[idx]
 
     return item.rating
   }
 
   render() {
-    const { movieList, sessionId } = this.props
-    // console.log('desktop')
+    const { movieList, sessionId, setRating } = this.props
+
     return (
       <>
         {movieList.map((movie) => (
@@ -76,9 +76,11 @@ export default class DesktopComponent extends Component {
                   <Paragraph className="card_description">{this.truncateOverview(movie.overview)}</Paragraph>
                   <Rate
                     allowHalf
-                    // value={}
-                    defaultValue={movie.rating ? movie.rating : this.getRating(movie.id)}
-                    onChange={(value) => this.movieService.addRating(movie.id, sessionId, value)}
+                    value={movie.rating ? movie.rating : this.getRating(movie.id)}
+                    onChange={(value) => {
+                      this.movieService.addRating(movie.id, sessionId, value)
+                      setRating(movie.id, value)
+                    }}
                     count={10}
                     className="card_rating-stars"
                   />

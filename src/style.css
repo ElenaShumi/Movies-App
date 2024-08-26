@@ -2,6 +2,7 @@
 
 body {
   margin: 0;
+  /* height: 100%; */
   font-family: -apple-system, BlinkMacSystemFont, 'Open Sans', 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -18,7 +19,7 @@ code {
 .main {
   margin: 0 auto;
   width: 1100px;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 .main_container {
@@ -101,6 +102,10 @@ code {
 
   .main_container {
       padding: 0 16px;
+  }
+
+  .col_card {
+    margin: 0 auto;
   }
 /* width */
   .card {

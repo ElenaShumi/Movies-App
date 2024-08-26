@@ -9,13 +9,12 @@ export default class MovieCard extends Component {
   }
 
   render() {
-    const { movieList, loading, error, onToggleRating, sessionId, movieListRated } = this.props
+    const { movieList, loading, error, onToggleRating, sessionId, ratingList, setRating } = this.props
 
-    // const hasDate = !(loading || error)
+    const hasDate = !(loading || error)
 
     const errorMessage = error ? <ErrorIndicator /> : null
     const spinner = loading ? <Spiner /> : null
-    // const content = hasDate ? <MoviesView movieList={movieList} /> : null
 
     const searchResult =
       movieList.length !== 0 ? (
@@ -23,7 +22,8 @@ export default class MovieCard extends Component {
           movieList={movieList}
           onToggleRating={onToggleRating}
           sessionId={sessionId}
-          movieListRated={movieListRated}
+          setRating={setRating}
+          ratingList={ratingList}
         />
       ) : (
         <Result
@@ -34,12 +34,13 @@ export default class MovieCard extends Component {
         />
       )
 
+    const content = hasDate ? searchResult : null
+
     return (
       <>
         {errorMessage}
         {spinner}
-        {/* {content} */}
-        {searchResult}
+        {content}
       </>
     )
   }

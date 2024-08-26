@@ -19,6 +19,7 @@ export default class TabsStatus extends Component {
     movieList: [],
     movieListRated: [],
     loading: true,
+    error: false,
     current: 1,
     currentRated: 1,
     sessionId: '',
@@ -29,6 +30,14 @@ export default class TabsStatus extends Component {
   onMoviesLoaded = (movies) => {
     this.setState({
       movieList: movies,
+      loading: false,
+      error: false,
+    })
+  }
+
+  onMoviesRatedLoaded = (movies) => {
+    this.setState({
+      movieListRated: movies,
       loading: false,
       error: false,
     })
@@ -66,12 +75,12 @@ export default class TabsStatus extends Component {
   }
 
   onChangePages = (page) => {
-    this.setState({ current: page })
+    this.setState({ current: page, loading: true })
     this.debouncedGetResponse(this.state.term, page)
   }
 
   onChangePagesRated = (page) => {
-    this.setState({ currentRated: page })
+    this.setState({ currentRated: page, loading: true })
     this.onRatedMovies(this.props.sessionId, page)
   }
 
@@ -95,7 +104,8 @@ export default class TabsStatus extends Component {
   onRatedMovies = (id, page) => {
     this.movieService
       .getRatedMovies(id, page)
-      .then((res) => this.setState({ movieListRated: res.results }))
+      .then((res) => res.results)
+      .then(this.onMoviesRatedLoaded)
       .catch(this.onError)
     this.movieService.getTotalResultsRated(id, page).then(this.onTotalResultsRated).catch(this.onError)
   }
@@ -103,7 +113,7 @@ export default class TabsStatus extends Component {
   render() {
     const { movieList, movieListRated, loading, error, current, currentRated, totalResults, totalResultsRated } =
       this.state
-    const { sessionId } = this.props
+    const { sessionId, ratingList, setRating } = this.props
     return (
       <Tabs
         defaultActiveKey="Search"
@@ -123,8 +133,9 @@ export default class TabsStatus extends Component {
                 <SearchPanel onSearchChange={this.onSearchChange} />
                 <CardsList
                   movieList={movieList}
-                  movieListRated={movieListRated}
-                  onError={error}
+                  setRating={setRating}
+                  ratingList={ratingList}
+                  error={error}
                   loading={loading}
                   onToggleRating={this.onToggleRating}
                   sessionId={sessionId}
@@ -147,7 +158,7 @@ export default class TabsStatus extends Component {
             key: 'Rated',
             children: (
               <>
-                <CardsList movieList={movieListRated} onError={error} onLoaded={loading} />
+                <CardsList movieList={movieListRated} error={error} onLoaded={loading} />
                 <Pagination
                   align="center"
                   defaultCurrent={1}

@@ -7,11 +7,9 @@ export default class MoviesView extends Component {
   state = {
     isMobile: window.innerWidth < 1116,
   }
+
   #handleResize
-  // constructor() {
-  //   super()
-  //   const handleResize = null
-  // }
+
   componentDidMount() {
     this.#handleResize = () => this.setState({ isMobile: window.innerWidth < 1116 })
     window.addEventListener('resize', this.#handleResize)
@@ -22,7 +20,7 @@ export default class MoviesView extends Component {
   }
 
   render() {
-    const { movieList, sessionId, onToggleRating, movieListRated } = this.props
+    const { movieList, sessionId, onToggleRating, movieListRated, ratingList, setRating } = this.props
     const { isMobile } = this.state
 
     const content = isMobile ? (
@@ -31,6 +29,8 @@ export default class MoviesView extends Component {
         sessionId={sessionId}
         onToggleRating={onToggleRating}
         movieListRated={movieListRated}
+        setRating={setRating}
+        ratingList={ratingList}
       />
     ) : (
       <DesktopComponent
@@ -38,6 +38,8 @@ export default class MoviesView extends Component {
         sessionId={sessionId}
         onToggleRating={onToggleRating}
         movieListRated={movieListRated}
+        setRating={setRating}
+        ratingList={ratingList}
       />
     )
     return <>{content}</>

@@ -14,6 +14,7 @@ export default class App extends Component {
   state = {
     term: '',
     movieList: [],
+    ratingList: [],
     arrGenres: [],
     sessionId: '',
   }
@@ -49,12 +50,24 @@ export default class App extends Component {
       return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1
     })
   }
+
   onSearchChange = (term) => {
     this.setState({ term })
   }
 
+  setRating = (id, value) => {
+    const { ratingList } = this.state
+    const newItem = { id, rating: value }
+
+    const newArray = [...ratingList, newItem]
+
+    this.setState({
+      ratingList: newArray,
+    })
+  }
+
   render() {
-    const { movieList, sessionId, arrGenres } = this.state
+    const { movieList, ratingList, sessionId, arrGenres } = this.state
 
     return (
       <>
@@ -63,7 +76,12 @@ export default class App extends Component {
             <Layout>
               <Content className="main">
                 <div className="main_container">
-                  <TabsStatus movieList={movieList} sessionId={sessionId} />
+                  <TabsStatus
+                    movieList={movieList}
+                    sessionId={sessionId}
+                    setRating={this.setRating}
+                    ratingList={ratingList}
+                  />
                 </div>
               </Content>
             </Layout>
